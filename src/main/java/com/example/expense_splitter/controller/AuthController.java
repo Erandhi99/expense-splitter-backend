@@ -24,8 +24,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestBody User req) {
-        User user = userRepo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        System.out.println("🔥 LOGIN ENDPOINT HIT! Email: " + req.getEmail());
+
+        User user = userRepo.findByEmail(req.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
