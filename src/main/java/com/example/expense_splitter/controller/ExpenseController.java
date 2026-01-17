@@ -4,9 +4,12 @@ import com.example.expense_splitter.model.Expense;
 import com.example.expense_splitter.repository.ExpenseRepository;
 import com.example.expense_splitter.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -27,5 +30,32 @@ public class ExpenseController {
         return expenseService.calculateBalances(
                 expenseRepo.findByGroupId(groupId)
         );
+    }
+
+    @PostMapping("/settle")
+    public ResponseEntity<Expense> settleDebt(@RequestBody Map<String, Object> settlementData) {
+        /*
+          Expected JSON:
+          {
+            "groupId": "group1",
+            "payerId": "BOB_ID",
+            "receiverId": "ALICE_ID",
+            "amount": 50.0
+          }
+        */
+        
+        String groupId = (String) settlementData.get("groupId");
+        String payerId = (String) settlementData.get("payerId");
+        String receiverId = (String) settlementData.get("receiverId");
+        
+        // Handle double/integer conversion safely
+        Double amount = 0.0;
+        if (settlementData.get("amount") instanceof Integer) {
+            amount = ((Integer) settlementData.get("amount")).doubleValue();
+        } else {
+            amount = (Double) settlementData.get("amount");
+        }
+
+        
     }
 }
