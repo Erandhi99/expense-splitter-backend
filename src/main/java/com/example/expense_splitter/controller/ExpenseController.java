@@ -56,6 +56,17 @@ public class ExpenseController {
             amount = (Double) settlementData.get("amount");
         }
 
+        // Create the Expense object logic
+        Expense settlement = new Expense();
+        settlement.setGroupId(groupId);
+        settlement.setAmount(amount);
+        settlement.setPaidBy(payerId);
+        settlement.setDescription("Settlement Payment");
         
+        // The key to settlement: The receiver "consumes" the full amount
+        settlement.setSplitAmong(List.of(receiverId));
+
+        Expense saved = expenseRepo.save(settlement);
+        return ResponseEntity.ok(saved);
     }
 }
