@@ -3,6 +3,7 @@ package com.example.expense_splitter.controller;
 import com.example.expense_splitter.model.Expense;
 import com.example.expense_splitter.repository.ExpenseRepository;
 import com.example.expense_splitter.service.ExpenseService;
+import com.example.expense_splitter.dto.TransactionSuggestion;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/api/expenses")
