@@ -159,4 +159,25 @@ public class ExpenseController {
 
         return suggestions;
     }
+
+    @GetMapping("/group/{groupId}/report")
+    public void generatePdfReport(HttpServletResponse response, @PathVariable String groupId) throws IOException {
+        
+        // 1. Fetch Data
+        List<Expense> expenses = expenseRepo.findByGroupId(groupId);
+
+        // 2. Set Response Headers (Tells browser "This is a PDF file to download")
+        response.setContentType("application/pdf");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=Group_" + groupId + "_Report.pdf";
+        response.setHeader(headerKey, headerValue);
+
+        // 3. Create Document
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+
+        document.open();
+
+        
+    }
 }
