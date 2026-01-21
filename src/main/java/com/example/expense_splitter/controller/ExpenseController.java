@@ -178,6 +178,60 @@ public class ExpenseController {
 
         document.open();
 
+        // --- Title ---
+        Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontTitle.setSize(18);
+        fontTitle.setColor(Color.BLUE);
+
+        Paragraph title = new Paragraph("Expense Report: " + groupId, fontTitle);
+        title.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(title);
         
+        document.add(new Paragraph(" ")); // Empty line for spacing
+
+        // --- Table Setup ---
+        PdfPTable table = new PdfPTable(3); // 3 Columns
+        table.setWidthPercentage(100f);
+        table.setWidths(new float[] {3.0f, 2.0f, 2.0f}); // Relative width of columns
+        table.setSpacingBefore(10);
+
+        // --- Table Header ---
+        PdfPCell cell = new PdfPCell();
+        cell.setBackgroundColor(Color.LIGHT_GRAY);
+        cell.setPadding(5);
+
+        Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontHeader.setColor(Color.WHITE);
+
+        cell.setPhrase(new Phrase("Description", fontHeader));
+        table.addCell(cell);
+        
+        cell.setPhrase(new Phrase("Paid By (User ID)", fontHeader));
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Amount ($)", fontHeader));
+        table.addCell(cell);
+
+        // --- Table Data ---
+        double totalAmount = 0.0;
+        
+        for (Expense expense : expenses) {
+            table.addCell(expense.getDescription());
+            table.addCell(expense.getPaidBy()); // Showing ID for now
+            table.addCell("$" + expense.getAmount());
+            
+            totalAmount += expense.getAmount();
+        }
+
+        document.add(table);
+
+        // --- Total Summary ---
+        document.add(new Paragraph(" "));
+        Font fontTotal = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        Paragraph totalParam = new Paragraph("Total Group Spending: $" + totalAmount, fontTotal);
+        totalParam.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(totalParam);
+
+        document.close();
     }
 }
